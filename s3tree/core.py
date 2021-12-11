@@ -96,10 +96,7 @@ class S3Tree(Sequence):
         # root, throw an error since this directory does not exist.
         if not tree_size and self.path != self.KEY_DELIMITER:
             raise DirectoryNotFound(self.path)
-
-        # otherwise, prepare the tree and return the list
-        else:
-            return self.__prepare_tree(tree)
+        return self.__prepare_tree(tree)
 
     def __prepare_tree(self, data):
         """Takes the tree data and returns a list representing the tree object."""
@@ -129,11 +126,9 @@ class S3Tree(Sequence):
             if error_code == 404:
                 raise BucketNotFound(bucket_name)
 
-            elif error_code == 403:
+            if error_code == 403:
                 raise BucketAccessDenied(bucket_name)
-
-            else:
-                raise exc
+            raise exc
 
     @property
     def num_files(self):
